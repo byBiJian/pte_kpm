@@ -2,6 +2,8 @@
 
 **版本 v1.0**（首个稳定运行版本，非最终版，持续迭代）
 
+部分实现参照了wxshadow的实现，感谢贡献
+
 基于 KernelPatch / KPatch-Next 框架的 KPM 内核模块：**通过修改目标页 PTE 的 UXN 位（bit 54）制造指令权限异常，在内核态 `do_mem_abort` 路径拦截**，实现用户态完全不可见的指令级断点；命中时可直接修改目标进程寄存器（X0~X8 / W0~W8）。
 
 全程**无 ptrace、无影子页/幽灵页、无代码段修改、无注入、不占用硬件断点槽（BRP/WRP）**，目标进程自身用 ptrace 占满硬件断点也不影响本模块。
@@ -49,7 +51,7 @@ pte_kpm/
 ├── build.sh        一键编译脚本
 ├── README.md       本文档
 ├── refs/           参考实现(不参与构建)
-│   ├── wxshadow.c / wxshadow_scan.c / wx.h   微信影子断点方案(单步防死锁参照)
+│   ├── wxshadow.c / wxshadow_scan.c / wx.h   wxshadow影子页断点方案(单步防死锁参照)
 │   └── kpn_start.c / k_hook.h                KPatch-Next 内核源码摘录(pgtable 等)
 └── tests/          测试程序(本机/5.15 通用)
     ├── demo.c        被调用库函数(demo_add/demo_mul)
